@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
+	_ "github.com/jinzhu/gorm/dialects/mysql"    //mysql database driver
 	_ "github.com/jinzhu/gorm/dialects/postgres" //postgres database driver
 
 	"github.com/rochmadqolim/gojwt/api/models"
@@ -22,7 +23,7 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 
 	var err error
 
-	if Dbdriver == "mysql" {
+	if (Dbdriver == "mysql") {
 		DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
 		server.DB, err = gorm.Open(Dbdriver, DBURL)
 		if err != nil {
@@ -31,8 +32,7 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 		} else {
 			fmt.Printf("We are connected to the %s database", Dbdriver)
 		}
-	}
-	if Dbdriver == "postgres" {
+	} else {
 		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", DbHost, DbPort, DbUser, DbName, DbPassword)
 		server.DB, err = gorm.Open(Dbdriver, DBURL)
 		if err != nil {
